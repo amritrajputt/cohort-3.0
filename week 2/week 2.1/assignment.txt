@@ -1,1 +1,0 @@
-Q1. try to create a promisified version of setTimeOut,fetch,Fs.readFile
