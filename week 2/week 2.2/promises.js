@@ -1,3 +1,4 @@
+const fs = require("fs")
 const { rejects } = require("assert")
 const { resolve } = require("path")
 
@@ -10,20 +11,20 @@ const { resolve } = require("path")
 // Test it with .then() and .catch().
 // sol:
 
-// const isEven = (num) =>{
-//     return new Promise((resolve,reject)=>{
-//          if(num === undefined){
-//             return reject (new Error("num not passed"))
-//         }
-//          if(num % 2 == 0)  resolve("Even number");
-//     else reject("Odd number");
+const isEven = (num) =>{
+    return new Promise((resolve,reject)=>{
+         if(num === undefined){
+            return reject (new Error("num not passed"))
+        }
+         if(num % 2 == 0)  resolve("Even number");
+    else reject("Odd number");
         
-//     })
-// }
+    })
+}
 
-// isEven()
-// .then((message)=>console.log(message))
-// .catch((err)=>console.log(err));
+isEven()
+.then((message)=>console.log(message))
+.catch((err)=>console.log(err));
 
 
 // Q2>>> Delayed Message
@@ -46,3 +47,38 @@ const delayedMessage = (msg, seconds) =>{
 delayedMessage("amrit",2)
 .then((message)=>console.log(message))
 .catch((err)=>console.log(err))
+
+// Q3>> Read & Uppercase
+
+// Using your promisifiedReadfile, read a file and return its content in uppercase.
+// Log the result with .then().
+
+const promisifiedReadfile = (path) => {
+    return new Promise((resolve,reject)=>{
+        if(path){
+            fs.readFile(path,"utf-8",(error,data)=>{
+                if(error) return reject(error)
+                    else {
+                    const newdata = data.toUpperCase()
+                    // resolve(newdata)
+                    fs.writeFile(path,newdata,(error,data)=>{
+                        if(error){
+                            reject(error)
+                        }else{
+                            resolve("data to written successfully!...")
+                        }
+                    })
+                } 
+            })
+        }else{
+            return reject (new Error("please paas path"))
+        }
+    })
+}
+promisifiedReadfile("./demo.txt")
+.then((data) => console.log(data))
+.catch((err) => console.log(err))
+
+
+
+
