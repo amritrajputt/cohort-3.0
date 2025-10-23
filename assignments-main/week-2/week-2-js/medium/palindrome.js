@@ -4,7 +4,19 @@
 */
 
 function isPalindrome(str) {
-  return true;
-}
+  let left = 0;
+  let right = str.length-1;
+  while(left<right){
+    if(str[left].toLowerCase() != str[right].toLowerCase()){
+      return false
+    }
+    left++
+    right--
+  }
+    return true
+  }
+  
+
+console.log(isPalindrome("area"));
 
 module.exports = isPalindrome;
