@@ -6,14 +6,12 @@ const addtodos = () => {
     if(todotext === "") return;
 
     const newtodo = document.createElement("div")
-    newtodo.classList.add("todo-item")
     
     const todospan = document.createElement("span")
     todospan.textContent = todotext
 
     const deleteBtn = document.createElement("button")
     deleteBtn.innerText = "❌";
-    deleteBtn.classList.add("delete-btn")
 
     deleteBtn.addEventListener("click" , ()=>{
         todoContainer.removeChild(newtodo)
