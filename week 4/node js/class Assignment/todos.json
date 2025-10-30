@@ -1,6 +1,18 @@
 [
   {
     "task": "go to college",
+    "done": true
+  },
+  {
+    "task": "go to gym",
+    "done": true
+  },
+  {
+    "task": "go to college",
+    "done": false
+  },
+  {
+    "task": "solve 2 DSA problems",
     "done": false
   }
 ]

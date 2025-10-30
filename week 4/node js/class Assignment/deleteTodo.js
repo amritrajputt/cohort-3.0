@@ -9,7 +9,7 @@ const deleteTodo = (index) => {
     
     const data = fs.readFileSync(file,"utf-8")
     let todos = JSON.parse(data)
-    if(index < 0 || index > todos.length){
+    if(index < 0 || index >= todos.length){
         return console.log("invalid index! ❌");
     }
     const removed = todos.splice(index,1)
