@@ -1,3 +1,5 @@
+// Assignment #1 - Trying to code a todo app and store data into the array
+
 import express from 'express'
 import crypto from "crypto"
 
