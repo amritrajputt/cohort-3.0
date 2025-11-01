@@ -23,15 +23,15 @@ const deleteTodo = (index) => {
         if (index < 0 || index >= todo.length) {
             return null;
         } else {
-            const removedArray = todo.splice(index, 1); 
+            const removedArray = todo.splice(index, 1);
             const removedTodo = removedArray[0];
             return removedTodo;
         }
     }
-    return null; 
+    return null;
 }
 
-const updatedTodo = (index,updates) => {
+const updatedTodo = (index, updates) => {
     if (index !== undefined && index !== null) {
         if (index < 0 || index >= todo.length) {
             return null;
@@ -40,9 +40,8 @@ const updatedTodo = (index,updates) => {
             return todo[index];
         }
     }
-    return null; 
+    return null;
 }
-
 
 
 
@@ -53,20 +52,20 @@ app.get('/', (req, res) => {
 app.delete('/delete/:index', (req, res) => {
     const index = parseInt(req.params.index, 10);
     const removedTodo = deleteTodo(index);
-    if(removedTodo){
-        res.status(201).json({message: 'todo deleted', todo : removedTodo})
-    }else{
+    if (removedTodo) {
+        res.status(201).json({ message: 'todo deleted', todo: removedTodo })
+    } else {
         res.status(400).json({ message: 'Provide a correct index' });
     }
 })
 
-app.put('/put/:index',(req,res) => {
+app.put('/put/:index', (req, res) => {
     const index = parseInt(req.params.index, 10);
-    const updates = req.body;   
-    const updatedTodotext = updatedTodo(index,updates);
-     if(updatedTodotext){
-        res.status(201).json({message: 'todo updated', todoUpdated : updatedTodotext})
-    }else{
+    const updates = req.body;
+    const updatedTodotext = updatedTodo(index, updates);
+    if (updatedTodotext) {
+        res.status(201).json({ message: 'todo updated', todoUpdated: updatedTodotext })
+    } else {
         res.status(400).json({ message: 'Provide a correct index' });
     }
 })
