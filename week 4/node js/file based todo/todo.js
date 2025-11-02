@@ -1,5 +1,5 @@
 import express from 'express';
-const fs = require("fs");
+import fs from "fs"
 
 const app = express();
 app.use(express.json());

@@ -1,0 +1,12 @@
+[
+  {
+    "todo": "go to gym",
+    "todoStatus": "pending",
+    "updates": "do dsa",
+    "index": "0"
+  },
+  {
+    "todo": "go to college",
+    "todoStatus": "pending"
+  }
+]
