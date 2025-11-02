@@ -1,99 +1,92 @@
-// Assignment #2 - Trying to code a filesystem based todo app and store data into the file
-import { error } from 'console'
-import crypto from "crypto"
-import express from 'express'
-const fs = require("fs")
+import express from 'express';
+const fs = require("fs");
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
-
-//function to add to-do
-function addTodotofile(description, status) {
+// Add a todo
+app.post('/addTodo', (req, res) => {
+    const { description, status } = req.body;
     if (!description || !status) {
-        return new Error("Description and status are required")
+        return res.status(400).json({ message: 'Description and status are required' });
     }
-    const newTodo = {
-        todo: description,
-        todoStatus: status
-    }
+    const newTodo = { todo: description, todoStatus: status };
     fs.readFile("todos.json", "utf-8", (error, data) => {
-        let todos = []
+        let todos = [];
         if (!error && data) {
-            try {
-                todos = JSON.parse(data)
-            } catch {
-                todos = []
-            }
+            try { todos = JSON.parse(data); } catch { todos = []; }
         }
-        todos.push(newTodo)
+        todos.push(newTodo);
         fs.writeFile("todos.json", JSON.stringify(todos, null, 2), (err) => {
             if (err) {
-                console.error("Error writing file:", err);
+                return res.status(500).json({ message: "Error writing file" });
             }
-        })
-    })
-}
+            res.status(201).json({ message: 'todo added', todo: newTodo });
+        });
+    });
+});
 
-//function to delete todo
-
-function deleteTodo(index) {
+// Delete a todo
+app.delete('/delete/:index', (req, res) => {
+    const index = parseInt(req.params.index,10);
     fs.readFile("todos.json", "utf-8", (err, data) => {
         let todos = [];
         if (!err && data) {
-            try {
-                todos = JSON.parse(data);
-            } catch {
-                todos = [];
-            }
+            try { todos = JSON.parse(data); } catch { todos = []; }
         }
-        if (typeof (index) !== "number" || index < 0 || index >= todos.length) {
-            console.error("Provide correct index");
-            return;
+        if (typeof index !== "number" || index < 0 || index >= todos.length) {
+            return res.status(400).json({ message: 'Provide a correct index' });
         }
-        todos.splice(index, 1)
+        const [removedTodo] = todos.splice(index, 1);
         fs.writeFile("todos.json", JSON.stringify(todos, null, 2), (err) => {
             if (err) {
-                console.error("Error writing file:", err);
+                return res.status(500).json({ message: "Error writing file" });
             }
-        })
-    })
+            res.status(200).json({ message: 'todo deleted', todo: removedTodo });
+        });
+    });
+});
 
-}
-
-//function to update todo
-
-function updateTodo(index, update) {
+// Update a todo
+app.put('/post/:index', (req, res) => {
+    const index = parseInt(req.params.index, 10);
+    const updates = req.body;
     fs.readFile("todos.json", "utf-8", (err, data) => {
         let todos = [];
         if (!err && data) {
-            try {
-                todos = JSON.parse(data);
-            } catch {
-                todos = [];
-            }
+            try { todos = JSON.parse(data); } catch { todos = []; }
         }
-        if (typeof (index) !== "number" || index < 0 || index >= todos.length) {
-            console.error("Provide correct index");
-            return;
+        if (typeof index !== "number" || index < 0 || index >= todos.length) {
+            return res.status(400).json({ message: 'Provide a correct index' });
         }
-        if (!update || typeof update !== "object") {
-            console.error("Updated todo object required");
-            return;
+        if (!updates || typeof updates !== "object") {
+            return res.status(400).json({ message: 'Updated todo object required' });
         }
-
-        todos[index] = { ...todos[index], ...update };
-
+        todos[index] = { ...todos[index], ...updates };
         fs.writeFile("todos.json", JSON.stringify(todos, null, 2), (err) => {
             if (err) {
-                console.error("Error writing file:", err);
+                return res.status(500).json({ message: "Error writing file" });
             }
-        }
-        )
+            res.status(200).json({ message: 'todo updated', todoUpdated: todos[index] });
+        });
+    });
+});
 
-    })
-}
-app.listen(8000)
+// Get all todos
+app.get('/todos', (req, res) => {
+    fs.readFile("todos.json", "utf-8", (err, data) => {
+        let todos = [];
+        if (!err && data) {
+            try { todos = JSON.parse(data); } catch { todos = []; }
+        }
+        res.status(200).json({ todos });
+    });
+});
+
+// Home route
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});
+
+app.listen(8000);
+
