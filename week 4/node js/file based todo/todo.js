@@ -11,29 +11,30 @@ app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
-// add to do
-
-const addTodo = (description, status) => {
-    if (description && status) {
-        fs.writeFile("todos.json", description, (error, data) => {
-            if (error) {
-                return error
-            } else {
-                const todo = []
-                const newTodo = {
-                    id: crypto.randomUUID(),
-                    description,
-                    status
-                }
-                todo.push(newTodo)
-                return newTodo
-            }
-            return null
-        })
+//function to add to-do
+function addTodotofile(description, status) {
+    if(!description || !status){
+        return new Error("Description and status are required")
     }
+    const newTodo = {
+        todo:description,
+        todoStatus:status
+    }
+    fs.readFile("todos.json","utf-8",(error,data)=>{
+        let todos = []
+        if(!error && data){
+            try{
+                todos = JSON.parse(data)
+            }catch{
+                todos = []
+            }
+        }
+        todos.push(newTodo)
+        fs.writeFile("todos.json",JSON.stringify(todos,null,2), (err) => {
+            if (err) {
+                console.error("Error writing file:", err);
+            }
+    })
+    })
 }
-
-
-
-
 app.listen(8000)
