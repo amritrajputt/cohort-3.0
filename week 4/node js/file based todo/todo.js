@@ -38,6 +38,8 @@ function addTodotofile(description, status) {
     })
 }
 
+//function to delete todo
+
 function deleteTodo(index) {
     fs.readFile("todos.json", "utf-8", (err, data) => {
         let todos = [];
@@ -61,6 +63,8 @@ function deleteTodo(index) {
     })
 
 }
+
+//function to update todo
 
 function updateTodo(index, update) {
     fs.readFile("todos.json", "utf-8", (err, data) => {
