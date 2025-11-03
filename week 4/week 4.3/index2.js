@@ -1,4 +1,5 @@
 const express = require("express")
+const { use } = require("react")
 const app = express()
 app.use(express.json())
 var users =  [{
@@ -39,15 +40,41 @@ app.post("/post",(req,res) => {
 })
 
 
-app.put("/",(req,res) => {
-    
+app.put("/put",(req,res) => {
+    for(let i =0 ;i<users[0].kidneys.length;i++){
+        users[0].kidneys[i].healthy = true
+    }
+    res.json({
+        msg:"done!"
+    })
 })
 
 
-app.delete("/",(req,res) => {
-    
+app.delete("/delete",(req,res) => {
+    if(isThereatleastoneunhealthyKidney){
+         const newKidneys = []
+    for(let i= 0;i<users[0].kidneys.length;i++){
+        if(users[0].kidneys[i].healthy ){
+            newKidneys.push({
+                healthy:true
+            })
+        }
+    }
+    users[0].kidneys = newKidneys
+    res.json({msg:"done"})
+    }else{
+        res.sendStatus(411)
+    }
 })
 
-
+function isThereatleastoneunhealthyKidney(){
+    let atleastOneUnhealthyKidney = false
+    for(let i = 0;i<users[0].kidneys.length;i++){
+        if(!users[0].kidneys[i].healthy){
+            atleastOneUnhealthyKidney = true
+        }
+    }
+    return atleastOneUnhealthyKidney
+}
 
 app.listen('3001')
