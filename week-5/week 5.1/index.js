@@ -33,6 +33,7 @@ app.get('/multiply', (req, res) => {
     res.json({
         ans: a * b
     })
+    
 })
 app.get('/divide', (req, res) => {
     const a = Number(req.query.a);
