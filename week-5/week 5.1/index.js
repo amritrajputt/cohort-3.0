@@ -19,6 +19,7 @@ app.get('/sum', (req, res) => {
     res.json({
         ans: a + b
     })
+    
 })
 app.get('/subtract', (req, res) => {
     const a = Number(req.query.a);
