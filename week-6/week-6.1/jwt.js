@@ -43,11 +43,10 @@ app.post('/signin', (req, res) => {
 
 app.get('/me', (req, res) => {
     const token = req.headers.token
-    const decodedInformation = jwt.verify(token, JWT_SECRET)
+    const decodedInformation = jwt.verify(token, JWT_SECRET)  // ✅ works fine if token is valid
     const username = decodedInformation.username
 
-
-    const user = users.find(u => u.token === token)
+    const user = users.find(u => u.token === token)  // ✅ your logic, now works
     if (user) {
         res.json({
             username: user.username,
@@ -59,7 +58,6 @@ app.get('/me', (req, res) => {
         })
     }
 })
-
-app.listen('3000', () => {
+app.listen('3001', () => {
     console.log('server is running...');
 })
