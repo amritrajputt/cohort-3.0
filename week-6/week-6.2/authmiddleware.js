@@ -11,6 +11,10 @@ function logger(req, res, next) {
     next();
 }
 
+app.get('/' , (req,res) => {
+    res.sendFile(__dirname + "/public/index.html")
+})
+
 app.post('/signup', logger, (req, res) => {
     const username = req.body.username
     const password = req.body.password
@@ -71,7 +75,7 @@ function auth(req, res, next) {
     }
 }
 app.get('/me', logger, auth, (req, res) => {
-    const currentUser = req.username
+    const currentUser = req.username.token
     const foundUser = users.find((user) => user.username === currentUser);
     if (foundUser) {
         return res.json({
