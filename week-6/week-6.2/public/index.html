@@ -30,11 +30,11 @@
     }
     async function getUserInformation() {
         const res = await axios.get('http://localhost:3000/me', {
-            Headers: {
+            headers: {
                 token: localStorage.getItem("token")
             }
         })
-        document.getElementById("information").innerHTML = "username" + res.data.username + "password " + res.data.password
+        document.getElementById("information").innerHTML = "username: " + res.data.username + "password: " + res.data.password
     }
     getUserInformation()
 </script>

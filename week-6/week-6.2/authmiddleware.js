@@ -58,7 +58,7 @@ app.post("/signin", logger, (req, res) => {
 })
 
 function auth(req, res, next) {
-    const token = req.headers.authorization;
+    const token = req.headers.token;
     if (!token) {
         return res.json({
             msg: "token is missing!"
@@ -75,7 +75,7 @@ function auth(req, res, next) {
     }
 }
 app.get('/me', logger, auth, (req, res) => {
-    const currentUser = req.username.token
+    const currentUser = req.username
     const foundUser = users.find((user) => user.username === currentUser);
     if (foundUser) {
         return res.json({
