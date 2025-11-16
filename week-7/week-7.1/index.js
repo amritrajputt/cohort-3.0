@@ -1,4 +1,5 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const { UserModel, TodoModel } = require('./db')
 const jwt = require("jsonwebtoken")
 const { default: mongoose } = require('mongoose')
@@ -18,7 +19,7 @@ app.post('/signup', async (req, res) => {
 
    try {
         await UserModel.create({
-            email: {email,unique:true},
+            email: email,
             password: password,
             name: name,
         });
