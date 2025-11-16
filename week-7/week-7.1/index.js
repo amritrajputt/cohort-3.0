@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
+const {z} = require('zod')
 const { UserModel, TodoModel } = require('./db')
 const jwt = require("jsonwebtoken")
 const { default: mongoose } = require('mongoose')
@@ -13,6 +14,22 @@ const JWT_SECRET = "amrit123123123"
 
 
 app.post('/signup', async (req, res) => {
+
+    //providing schema of input to zod
+    const requiredBody = z.object({
+        email:z.string().min(12).max(30).email(),
+        password:z.string().min(8).max(100),
+        name:z.string().min(3).max(50)
+    })
+
+    const parsedDataWithSuccess = requiredBody.safeParse(req.body)
+    if(!parsedDataWithSuccess.success){
+        res.json({
+            message: "Incorrect format"
+        })
+        return
+    }
+
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
