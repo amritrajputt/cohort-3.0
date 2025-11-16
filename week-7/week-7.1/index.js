@@ -16,15 +16,14 @@ app.post('/signup', async (req, res) => {
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
-    const hashedPassword = await bcrypt.hash(password,5)
-    
     
    try {
+        const hashedPassword = await bcrypt.hash(password,5)
         await UserModel.create({
-            email: email,
+            email: {type:String,unique: true },
             password: hashedPassword,
             name: name,
-            
+
         });
     } catch (error) {
         return res.status(400).json({
@@ -42,12 +41,18 @@ app.post('/signin', async (req, res) => {
     const password = req.body.password
 
     const user = await UserModel.findOne({
-        email: email,
-        password: password
+        email: email
     })
-    console.log(user);
+    if(!user) {
+        res.status(403).json({
+            message: "User doesn't exist in our DB"
+        })
+        return
+    }
 
-    if (user) {
+   const passwordMatch = await bcrypt.compare(password,user.password)
+
+    if (passwordMatch) {
         const token = jwt.sign({
             id: user._id.toString()
         }, JWT_SECRET)
