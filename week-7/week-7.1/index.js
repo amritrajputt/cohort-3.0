@@ -16,12 +16,15 @@ app.post('/signup', async (req, res) => {
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
-
+    const hashedPassword = await bcrypt.hash(password,5)
+    
+    
    try {
         await UserModel.create({
             email: email,
-            password: password,
+            password: hashedPassword,
             name: name,
+            
         });
     } catch (error) {
         return res.status(400).json({
