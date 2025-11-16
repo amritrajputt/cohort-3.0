@@ -17,6 +17,7 @@ app.post('/signup', async (req, res) => {
 
     //providing schema of input to zod
     const requiredBody = z.object({
+        //sssignment 1 uppercase,1lowercase,1 special character
         email:z.string().min(12).max(30).email(),
         password:z.string().min(8).max(100),
         name:z.string().min(3).max(50)
@@ -25,7 +26,8 @@ app.post('/signup', async (req, res) => {
     const parsedDataWithSuccess = requiredBody.safeParse(req.body)
     if(!parsedDataWithSuccess.success){
         res.json({
-            message: "Incorrect format"
+            message: "Incorrect format",
+            error : parsedDataWithSuccess.error
         })
         return
     }
