@@ -14,6 +14,6 @@ const createUserRoutes = (app) => {
     })
 }
 
-module.exports({
+module.exports = {
     userRouter: userRouter
-})
+}

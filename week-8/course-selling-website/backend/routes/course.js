@@ -2,7 +2,7 @@ const { Router } = require('express')
 const courseRouter = Router()
 
 const createCourseRoutes = (app) => {
-    courseRouter.post('/purchases', (req, res) => {
+    courseRouter.post('/purchase', (req, res) => {
 
     })
     courseRouter.get('/preview', (req, res) => {
@@ -10,6 +10,6 @@ const createCourseRoutes = (app) => {
     })
 
 }
-module.exports({
+module.exports = {
     courseRouter: courseRouter
-})
+}
