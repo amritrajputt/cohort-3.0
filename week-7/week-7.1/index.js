@@ -59,10 +59,11 @@ app.post('/signin', async (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
-    const user = await UserModel.findOne({
+    const user = await UserModel.find({
         email: email
     })
     if(!user) {
+        
         res.status(403).json({
             message: "User doesn't exist in our DB"
         })
