@@ -9,6 +9,7 @@ const createUserRoutes = (app) => {
     userRouter.post('/login', (req, res) => {
 
     })
+    
     userRouter.get('/purchases', (req, res) => {
 
     })
