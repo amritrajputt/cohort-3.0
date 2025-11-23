@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { object } = require('zod');
-
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
+const dotenv = require("dotenv");
+dotenv.config();
 
 const userSchema = new Schema({
     firstname: String,
