@@ -13,9 +13,14 @@ app.use('/api/v1/course', courseRouter)
 
 
 async function main() {
-await mongoose.connect(process.env.MONGO_URI)
+    try {
+        await mongoose.connect(process.env.MONGO_URI)
+    } catch (error) {
+        console.log("Failed to connect to the database", error)
+    }
+
+}
 app.listen(3000, () => {
     console.log("server is running...");
 })
-}
 main()
