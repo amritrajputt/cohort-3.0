@@ -5,11 +5,7 @@ const bcrypt = require('bcrypt')
 const { z, email } = require('zod')
 
 
-const createAdminRouter = (app) => {
     adminRouter.post('/signup', async (req, res) => {
-        const name = req.body.name
-        const username = req.body.username
-        const password = req.body.password
 
         const requiredInput = z.object({
             email: z.string().min(6).max(60).email(),
@@ -23,7 +19,8 @@ const createAdminRouter = (app) => {
                 .refine((value) => [...value].some((c) => c >= '0' && c <= '9'), {
                     message: "Password must contain at least one number",
                 }),
-            name: z.string().min(3).max(30)
+            firstname: z.string().min(3).max(30),
+            lastname: z.string().min(3).max(20)
         })
         const parsedDataWithSuccess = requiredInput.safeParse(req.body)
         if (!parsedDataWithSuccess.success) {
@@ -33,21 +30,23 @@ const createAdminRouter = (app) => {
             })
             return
         }
+        const { email, firstname, lastname, password } = parsedDataWithSuccess.data
         try {
-            const hashedPassword = await bcrypt.hash(password, 5)
+            const existing = await adminModel.findOne({ email })
+            if (existing) {
+                return res.status(400).json({ message: "User already exists" })
+            }
+            const hashedPassword = await bcrypt.hash(password, 10)
             await adminModel.create({
-                name: name,
+                firstname: firstname,
+                lastname: lastname,
                 email: email,
                 password: hashedPassword
             })
-        } catch (error) {
-            return res.status(400).json({
-                message: "User already exists!",
-            });
-        }
-        res.json({
-            message: "you are signed up"
-        })
+             res.json({ message: "You are signed up" })
+     } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message })
+}
     })
 
     adminRouter.post('/login', (req, res) => {
@@ -65,7 +64,7 @@ const createAdminRouter = (app) => {
     adminRouter.get('/course/bulk', (req, res) => {
 
     })
-}
+
 module.exports = {
-    adminRouter: adminRouter
+    adminRouter
 }
