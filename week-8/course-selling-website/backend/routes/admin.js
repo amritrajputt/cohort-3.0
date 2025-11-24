@@ -3,7 +3,7 @@ const adminRouter = Router()
 const { adminModel } = require('../db')
 const bcrypt = require('bcrypt')
 const { z, email } = require('zod')
-const JWT_ADMIN_PASSWORD = "amritRajput"
+const {JWT_ADMIN_PASSWORD} = require('../config')
 const jwt = require('jsonwebtoken')
 
 adminRouter.post('/signup', async (req, res) => {
@@ -65,7 +65,7 @@ adminRouter.post('/signin', async (req, res) => {
     if (passwordMatched) {
         const token = jwt.sign({
             id: admin._id.toString(),
-        }, JWT_ADMIN_PASSWORD)
+        },JWT_ADMIN_PASSWORD)
         res.json({
             token: token
         })
