@@ -97,46 +97,46 @@ adminRouter.post('/course', adminMiddleware, async (req, res) => {
             message: `course can't be uploaded`
         })
     }
-})
+}) 
 
 adminRouter.put('/course', adminMiddleware, async (req, res) => {
     const adminId = req.userId
     const { title, description, imageUrl, price, courseId } = req.body
     try {
-        const course = await courseModel.updateOne({ _id: courseId,creatorId:adminId },
+        const course = await courseModel.updateOne({ _id: courseId, creatorId: adminId },
             {
                 title: title,
                 description: description,
                 imageUrl: imageUrl,
                 price: price,
+            })
+        res.json({
+            message: "course updated",
+            courseId: course._id
         })
-res.json({
-    message: "course updated",
-    courseId: course._id
-})
     } catch (error) {
-    res.status(403).json({
-        message: `course can't be uploaded`
-    })
-} 
-    })
+        res.status(403).json({
+            message: `course can't be uploaded`
+        })
+    }
+})
 
 
-adminRouter.get('/course/bulk',adminMiddleware, (req, res) => {
-const adminId = req.userId
-try {
-    const courses = courseModel.find({
-        courseId:adminId
-    })
-    res.json({
-        message:"Here is your all courses",
-        courses
-    })
-} catch (error) {
-    res.status(403).json({
-        message:"Error fetching your courses"
-    })
-}
+adminRouter.get('/course/bulk', adminMiddleware,async (req, res) => {
+    const adminId = req.userId
+    try {
+        const courses =  await courseModel.find({
+            courseId: adminId
+        })
+        res.json({
+            message: "Here is your all courses",
+            courses
+        })
+    } catch (error) {
+        res.status(403).json({
+            message: "Error fetching your courses"
+        })
+    }
 })
 
 module.exports = {
