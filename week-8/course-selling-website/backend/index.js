@@ -11,7 +11,6 @@ app.use('/api/v1/user', userRouter)
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/course', courseRouter)
 
-
 async function main() {
     try {
         await mongoose.connect(process.env.MONGO_URI)
