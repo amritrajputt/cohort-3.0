@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const adminRouter = Router()
-const { adminModel } = require('../db')
+const { adminModel, courseModel } = require('../db')
 const bcrypt = require('bcrypt')
 const { z, email } = require('zod')
-const {JWT_ADMIN_PASSWORD} = require('../config')
+const { JWT_ADMIN_PASSWORD } = require('../config')
 const jwt = require('jsonwebtoken')
+const { adminMiddleware } = require('../middleware/admin')
 
 adminRouter.post('/signup', async (req, res) => {
 
@@ -65,7 +66,7 @@ adminRouter.post('/signin', async (req, res) => {
     if (passwordMatched) {
         const token = jwt.sign({
             id: admin._id.toString(),
-        },JWT_ADMIN_PASSWORD)
+        }, JWT_ADMIN_PASSWORD)
         res.json({
             token: token
         })
@@ -76,12 +77,31 @@ adminRouter.post('/signin', async (req, res) => {
     }
 })
 
-adminRouter.post('/course', (req, res) => {
-
+adminRouter.post('/course', adminMiddleware, async (req, res) => {
+    const adminId = req.userId
+    const { title, description, imageUrl, price } = req.body
+    try {
+        const course = await courseModel.create({
+            title: title,
+            description: description,
+            imageUrl: imageUrl,
+            price: price,
+            creatorId: adminId
+        })
+        res.json({
+            message: "course created",
+            courseId: course._id
+        })
+    } catch (error) {
+        res.status(403).json({
+            message: `course can't be uploaded`
+        })
+    }
 })
 
-adminRouter.put('/course', (req, res) => {
-
+adminRouter.put('/course',adminMiddleware, (req, res) => {
+    const adminId = req.userId
+    
 })
 
 adminRouter.get('/course/bulk', (req, res) => {
