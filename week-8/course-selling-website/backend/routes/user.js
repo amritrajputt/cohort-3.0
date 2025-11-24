@@ -1,12 +1,15 @@
 require('dotenv').config()
 const { Router } = require('express')
-const { userModel } = require('../db')
+const { userModel, purchaseModel } = require('../db')
 const userRouter = Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { z, email } = require('zod')
-const {JWT_USER_PASSWORD} = require('../config')
-
+const { JWT_USER_PASSWORD } = require('../config')
+const { userMiddleware } = require('../middleware/user')
+const express = require('express')
+const app = express()
+app.use(express.json())
 
 userRouter.post('/signup', async (req, res) => {
     const requiredInput = z.object({
@@ -77,8 +80,15 @@ userRouter.post('/signin', async (req, res) => {
     }
 })
 
-userRouter.get('/purchases', (req, res) => {
-
+userRouter.get('/purchases', userMiddleware, async (req, res) => {
+    const userId = req.userId
+    const purchases = await purchaseModel.find({
+        userId
+    })
+    res.json({
+        "message": "Purchased courses",
+        purchases
+    })
 })
 
 module.exports = {
