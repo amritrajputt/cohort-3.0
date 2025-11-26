@@ -65,11 +65,11 @@ userRouter.post('/signin', async (req, res) => {
         })
         return
     }
-    const passwordMatched = await bcrypt.compare(password, user.password)
+    const passwordMatched = await bcrypt.compare(password , user.password)
     if (passwordMatched) {
         const token = jwt.sign({
             id: user._id.toString(),
-        }, JWT_USER_PASSWORD)
+        }, JWT_USER_PASSWORD) 
         res.json({
             token: token
         })
