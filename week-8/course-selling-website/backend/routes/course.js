@@ -5,7 +5,7 @@ const courseRouter = Router()
 
 
 courseRouter.post('/purchase', userMiddleware, async (req, res) => {
-    const userId = req.body.userId
+    const userId = req.userId;
     const courseId = req.body.courseId
     await purchaseModel.create({
         userId, courseId

@@ -7,22 +7,22 @@ const bcrypt = require('bcrypt')
 const { z, email } = require('zod')
 const { JWT_USER_PASSWORD } = require('../config')
 const { userMiddleware } = require('../middleware/user')
-const express = require('express')
-const app = express()
-app.use(express.json())
+
 
 userRouter.post('/signup', async (req, res) => {
     const requiredInput = z.object({
-        email: z.string().min(6).max(60).email(),
-        password: z.string().min(8).max(20)
-            .refine((val) => [...val].some((c) => c => 'A' && c <= "Z"), {
-                message: "Password must contain at least one uppercase letter",
+        email: z.string().email().min(6).max(60),
+        password: z.string()
+            .min(8)
+            .max(20)
+            .refine(v => [...v].some(c => c >= 'A' && c <= 'Z'), {
+                message: "Password must contain at least one uppercase letter"
             })
-            .refine((val) => [...val].some((c) => c => 'a' && c <= "z"), {
-                message: "Password must contain at least one lowercase letter",
+            .refine(v => [...v].some(c => c >= 'a' && c <= 'z'), {
+                message: "Password must contain at least one lowercase letter"
             })
-            .refine((value) => [...value].some((c) => c >= '0' && c <= '9'), {
-                message: "Password must contain at least one number",
+            .refine(v => [...v].some(c => c >= '0' && c <= '9'), {
+                message: "Password must contain at least one number"
             }),
         firstname: z.string().min(3).max(30),
         lastname: z.string().min(3).max(20)
@@ -65,11 +65,11 @@ userRouter.post('/signin', async (req, res) => {
         })
         return
     }
-    const passwordMatched = await bcrypt.compare(password , user.password)
+    const passwordMatched = await bcrypt.compare(password, user.password)
     if (passwordMatched) {
         const token = jwt.sign({
             id: user._id.toString(),
-        }, JWT_USER_PASSWORD) 
+        }, JWT_USER_PASSWORD)
         res.json({
             token: token
         })
@@ -83,7 +83,11 @@ userRouter.post('/signin', async (req, res) => {
 userRouter.get('/purchases', userMiddleware, async (req, res) => {
     const userId = req.userId
     const purchases = await purchaseModel.find({
-        userId
+        userId: userId   
+    })
+
+    const courseData = await purchaseModel.find({
+        _id: {$in: purchases.map(x => x.courseId)}
     })
     res.json({
         "message": "Purchased courses",
